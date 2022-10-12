@@ -1,0 +1,8 @@
+{
+  "domain": "tcpsensor",
+  "name": "TCP Sensor",
+  "documentation": "https://www.home-assistant.io/integrations/tcp",
+  "codeowners": ["@se3"],
+  "version": "v2022.10.12",
+  "iot_class": "local_polling"
+}

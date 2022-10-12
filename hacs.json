@@ -1,0 +1,4 @@
+{
+    "name": "TCP Sensor",
+    "iot_class": ["Local Polling"]
+}
