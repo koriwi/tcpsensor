@@ -3,16 +3,17 @@ This home assistant tcp sensor is a copy of already available
 
 ## Installation of the custom component
 
-* Add custom repository https://github.com/se3/tcpsensor as Integration in HACS menu
+* Add custom repository https://github.com/se3/tcpsensor as Integration in HACS menu and click download
 * Follow the instruction https://hacs.xyz/docs/navigation/stores
 
-* Enable the new sensor in your ```configuration.yaml```, see Description below
-* Restart Home Assistant
+* Restart Home Assistant (HA) after download to enable Integration
+* 
+* Add tspsensor in your ```configuration.yaml```, see Description below and restart HA again 
 
 ### Configuration Example
 ```
 sensor:
-  - platform: tcp
+  - platform: tcpsensor
     name: "TCP sensor name"
     host: 192.168.178.111
     port: 8899
