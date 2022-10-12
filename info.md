@@ -8,7 +8,7 @@ This home assistant tcp sensor is a copy of already available
 
 * Restart Home Assistant (HA) after download to enable Integration
 * 
-* Add tspsensor in your ```configuration.yaml```, see Description below and restart HA again 
+* Add tspsensor in your ```configuration.yaml```, see Configuration below and restart HA again 
 
 ### Configuration Example
 ```
