@@ -10,6 +10,7 @@ from typing import Any, Final
 import voluptuous as vol
 
 from homeassistant.const import (
+    CONF_UNIQUE_ID,
     CONF_HOST,
     CONF_NAME,
     CONF_PAYLOAD,
@@ -23,7 +24,7 @@ from homeassistant.const import (
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import TemplateError
 import homeassistant.helpers.config_validation as cv
-from homeassistant.helpers.entity import Entity
+from homeassistant.helpers.entity import Entity, generate_entity_id
 from homeassistant.helpers.template import Template
 from homeassistant.helpers.typing import ConfigType
 
@@ -45,6 +46,7 @@ _LOGGER: Final = logging.getLogger(__name__)
 
 TCP_PLATFORM_SCHEMA: Final[dict[vol.Marker, Any]] = {
     vol.Required(CONF_HOST): cv.string,
+    vol.Required(CONF_UNIQUE_ID): cv.string,
     vol.Required(CONF_PORT): cv.port,
     vol.Required(CONF_PAYLOAD): cv.string,
     vol.Optional(CONF_PAYLOAD_IS_HEX, default=DEFAULT_PAYLOAD_HEX): cv.boolean,
@@ -74,6 +76,7 @@ class TcpEntity(Entity):
             CONF_NAME: config[CONF_NAME],
             CONF_HOST: config[CONF_HOST],
             CONF_PORT: config[CONF_PORT],
+            CONF_UNIQUE_ID: config[CONF_UNIQUE_ID],
             CONF_TIMEOUT: config[CONF_TIMEOUT],
             CONF_PAYLOAD: config[CONF_PAYLOAD],
             CONF_PAYLOAD_IS_HEX: config[CONF_PAYLOAD_IS_HEX],
@@ -84,7 +87,7 @@ class TcpEntity(Entity):
             CONF_SSL: config[CONF_SSL],
             CONF_VERIFY_SSL: config[CONF_VERIFY_SSL],
         }
-
+        # self.entity_id = generate_entity_id("sensor.{}", config[CONF_NAME])
         self._ssl_context: ssl.SSLContext | None = None
         if self._config[CONF_SSL]:
             self._ssl_context = ssl.create_default_context()
@@ -99,6 +102,10 @@ class TcpEntity(Entity):
     def name(self) -> str:
         """Return the name of this sensor."""
         return self._config[CONF_NAME]
+    @property
+    def unique_id(self) -> str:
+        """Return the unique_id of this sensor."""
+        return self._config[CONF_UNIQUE_ID]
 
     def update(self) -> None:
         """Get the latest value for this sensor."""
@@ -148,7 +155,7 @@ class TcpEntity(Entity):
                 return
 
             value = (
-                " ".join("%02x" % b for b in sock.recv(self._config[CONF_BUFFER_SIZE]))
+                " ".join("%02x" % b for b in sock.recv(self._config[CONF_BUFFER_SIZE]))[:254]
                 if self._config[CONF_PAYLOAD_IS_HEX]
                 else sock.recv(self._config[CONF_BUFFER_SIZE]).decode()
             )

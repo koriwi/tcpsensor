@@ -21,3 +21,4 @@ class TcpSensorConfig(TypedDict):
     buffer_size: int
     ssl: bool
     verify_ssl: bool
+    unique_id: str | None
